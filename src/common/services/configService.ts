@@ -21,6 +21,14 @@ export class ConfigService {
     return this.configService.get<string>('MONGO_HOST') || '127.0.0.1';
   }
 
+  get mongoUser(): string {
+    return this.configService.get<string>('MONGO_USER') || '';
+  }
+
+  get mongoPass(): string {
+    return this.configService.get<string>('MONGO_PASS') || '';
+  }
+
   get dbName(): string {
     return (
       this.configService.get<string>('DB_NAME') || 'license_version_control'

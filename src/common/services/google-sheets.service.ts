@@ -1,9 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common'
-import * as fs from 'fs'
-import { JWT } from 'google-auth-library'
-import { GoogleSpreadsheet } from 'google-spreadsheet'
-import { LicenseInfo } from '../schemas/licenseInfoSchema'
-import { ConfigService } from './configService'
+import { Injectable, Logger } from '@nestjs/common';
+import * as fs from 'fs';
+import { JWT } from 'google-auth-library';
+import { GoogleSpreadsheet } from 'google-spreadsheet';
+import { LicenseInfo } from '../schemas/licenseInfoSchema';
+import { ConfigService } from './configService';
 
 @Injectable()
 export class GoogleSheetsService {
@@ -37,17 +37,11 @@ export class GoogleSheetsService {
       await this.doc.loadInfo();
       const sheet = this.doc.sheetsByIndex[0];
       const headers = [
-        'Type',
-        'Application',
-        'Version',
-        'Clients Count',
-        'Expiration Date',
-        'Plan',
-        'Modules',
+        'User',
+        'License Expiration Date',
         'Hardware ID',
-        'Serial',
         'Server IP',
-        'Tech Support Limit',
+        'Support untill',
         'Added At'
       ];
 
@@ -57,17 +51,11 @@ export class GoogleSheetsService {
         await sheet.setHeaderRow(headers);
       }
       await sheet.addRow({
-        'Type': license.type,
-        'Application': 'Bot',
-        'Version': license.applicationVersion,
-        'Clients Count': license.clientsCount,
-        'Expiration Date': license.expirationDate ? new Date(license.expirationDate).toLocaleDateString() : 'N/A',
-        'Plan': license.plan || 'no plan',
-        'Modules': license.modules || 'no modules',
+        'User': license.type,
+        'License Expiration Date': license.expirationDate ? new Date(license.expirationDate).toLocaleDateString() : 'N/A',
         'Hardware ID': license.hardwareId,
-        'Serial': license.serial || 'N/A',
         'Server IP': license.serverIp,
-        'Tech Support Limit': license.techSupportLimit ? new Date(license.techSupportLimit).toLocaleDateString() : 'N/A',
+        'Support untill': license.techSupportLimit ? new Date(license.techSupportLimit).toLocaleDateString() : 'N/A',
         'Added At': new Date().toLocaleString(),
       });
 

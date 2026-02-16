@@ -74,8 +74,8 @@ export class AdminService {
         );
       }
 
-      const dateStr = args[0];
-      const serverIp = args[1];
+      const dateStr:string = args[0];
+      const serverIp = args.slice(1);
 
       const dateParts = dateStr.split('.');
       if (dateParts.length !== 3) {
@@ -126,7 +126,7 @@ export class AdminService {
         hardwareId: licenseResult.hardwareId,
         serial: licenseResult.serial || 'N/A',
         techSupportLimit: techSupportLimit,
-        serverIp: serverIp,
+        serverIp: serverIp.length===1? serverIp[0]:serverIp.join(' | '),
         googleSheetsLink: '',
         fileId,
       });
@@ -136,7 +136,13 @@ export class AdminService {
       await this.googleSheetsService.appendLicense(licenseInfo);
 
       return ctx.reply(
-        `License added successfully!\nUser: ${licenseInfo.type}\nIP: ${serverIp}\nSupport until: ${dateStr}`,
+        `
+License added successfully!
+User: ${licenseInfo.type}
+Hardware ID: ${licenseInfo.hardwareId}
+License Expiration Date: ${licenseInfo.expirationDate.toLocaleDateString()}
+IP: ${licenseInfo.serverIp}
+Support until: ${dateStr}`,
       );
     } catch (error) {
       console.error('Error adding license:', error);
@@ -366,3 +372,4 @@ export class AdminService {
     await ctx.editMessageReplyMarkup({ inline_keyboard: response });
   }
 }
+
